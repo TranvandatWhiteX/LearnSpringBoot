@@ -24,7 +24,10 @@ public class UserController {
         int code = 201;
         String message = "Create user successfully";
         User user = userService.createUser(request);
-        ApiResponse<User> userApiResponse = new ApiResponse<>(code, message, user);
+        ApiResponse<User> userApiResponse = new ApiResponse<>();
+        userApiResponse.setCode(code);
+        userApiResponse.setMessage(message);
+        userApiResponse.setResult(user);
         return userApiResponse;
     }
 
@@ -50,8 +53,7 @@ public class UserController {
         int code = 200;
         String message = "Update user successfully";
         User user = userService.updateUserById(userId, request);
-        ApiResponse<User> userApiResponse = new ApiResponse<>(code, message, user);
-        return userApiResponse;
+        return new ApiResponse<User>(code, message, user);
     }
 
     @DeleteMapping("/delete-user/{userId}")

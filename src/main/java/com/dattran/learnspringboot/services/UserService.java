@@ -3,6 +3,8 @@ package com.dattran.learnspringboot.services;
 import com.dattran.learnspringboot.dtos.request.UserRequest;
 import com.dattran.learnspringboot.dtos.request.UserUpdateRequest;
 import com.dattran.learnspringboot.entities.User;
+import com.dattran.learnspringboot.enums.ErrorCode;
+import com.dattran.learnspringboot.exceptions.AppException;
 import com.dattran.learnspringboot.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class UserService {
     private final UserRepository userRepository;
     public User createUser(UserRequest request) {
         User user = new User();
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
@@ -28,7 +33,7 @@ public class UserService {
     }
 
     public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
     public User updateUserById(String userId, UserUpdateRequest request) {

@@ -2,10 +2,10 @@ package com.dattran.learnspringboot.controllers;
 
 import com.dattran.learnspringboot.dtos.request.UserRequest;
 import com.dattran.learnspringboot.dtos.request.UserUpdateRequest;
-import com.dattran.learnspringboot.dtos.response.AllUserResponse;
-import com.dattran.learnspringboot.dtos.response.UserResponse;
+import com.dattran.learnspringboot.dtos.response.ApiResponse;
 import com.dattran.learnspringboot.entities.User;
 import com.dattran.learnspringboot.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,36 +20,48 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create-user")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest request) {
+    public ApiResponse<User> createUser(@RequestBody @Valid UserRequest request) {
+        int code = 201;
         String message = "Create user successfully";
         User user = userService.createUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponse(message, user));
+        ApiResponse<User> userApiResponse = new ApiResponse<>(code, message, user);
+        return userApiResponse;
     }
 
     @GetMapping
-    public ResponseEntity<AllUserResponse> getAllUsers() {
+    public ApiResponse<List<User>> getAllUsers() {
+        int code = 200;
         String message = "Get all users successfully";
         List<User> users = userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(new AllUserResponse(message, users));
+        return new ApiResponse<>(code, message, users);
     }
 
     @GetMapping("/get-user/{userId}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable("userId") String userId) {
+    public ApiResponse<User> getUserById(@PathVariable("userId") String userId) {
+        int code = 200;
         String message = "Get user successfully";
         User user = userService.getUserById(userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponse(message, user));
+        ApiResponse<User> userApiResponse = new ApiResponse<>(code, message, user);
+        return userApiResponse;
     }
 
     @PutMapping("/update-user/{userId}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateRequest request) {
+    public ApiResponse<User> updateUser(@PathVariable("userId") String userId, @RequestBody @Valid UserUpdateRequest request) {
+        int code = 200;
         String message = "Update user successfully";
         User user = userService.updateUserById(userId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponse(message, user));
+        ApiResponse<User> userApiResponse = new ApiResponse<>(code, message, user);
+        return userApiResponse;
     }
 
     @DeleteMapping("/delete-user/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") String userId) {
+    public ApiResponse deleteUser(@PathVariable("userId") String userId) {
+        int code = 200;
+        String message = "Delete user successfully";
         userService.deleteUser(userId);
-        return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully");
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(code);
+        apiResponse.setMessage(message);
+        return apiResponse;
     }
 }

@@ -1,16 +1,18 @@
 package com.dattran.learnspringboot.dtos.response;
 
-import com.dattran.learnspringboot.entities.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
-public class UserResponse {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ApiResponse<T> {
+    private int code;
     private String message;
-    private User user;
+    private T result;
 }

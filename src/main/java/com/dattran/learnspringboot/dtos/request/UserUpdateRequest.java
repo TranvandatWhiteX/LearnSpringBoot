@@ -1,5 +1,6 @@
 package com.dattran.learnspringboot.dtos.request;
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateRequest {
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
     private String firstName;
     private String lastName;
